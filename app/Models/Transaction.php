@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Transaction extends Model
 {
@@ -17,8 +17,9 @@ class Transaction extends Model
      * @var array
      */
     protected $fillable = [
-        'cashier_id', 'customer_id', 'invoice', 'cash', 'change', 'discount', 'grand_total','payment_id'
+        'cashier_id', 'customer_id', 'invoice', 'cash', 'change', 'discount', 'grand_total', 'payment_id'
     ];
+
     /**
      * details
      *
@@ -28,6 +29,7 @@ class Transaction extends Model
     {
         return $this->hasMany(TransactionDetail::class);
     }
+
     /**
      * customer
      *
@@ -37,7 +39,18 @@ class Transaction extends Model
     {
         return $this->belongsTo(Customer::class);
     }
-      /**
+    
+        /**
+         * payment
+         *
+         * @return void
+         */
+        public function payment()
+        {
+            return $this->belongsTo(Payment::class);
+        }
+
+    /**
      * cashier
      *
      * @return void
@@ -46,6 +59,7 @@ class Transaction extends Model
     {
         return $this->belongsTo(User::class, 'cashier_id');
     }
+
     /**
      * profits
      *
@@ -54,15 +68,6 @@ class Transaction extends Model
     public function profits()
     {
         return $this->hasMany(Profit::class);
-    }
-    /**
-     * customer
-     *
-     * @return void
-     */
-    public function payment()
-    {
-        return $this->belongsTo(Payment::class);
     }
 
     /**

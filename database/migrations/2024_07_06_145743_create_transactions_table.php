@@ -24,6 +24,7 @@ return new class extends Migration
 
             //Payment Method
             $table->unsignedBigInteger('payment_id');
+
             //relationship payment
             $table->foreign('payment_id')->references('id')->on('payments');
 
