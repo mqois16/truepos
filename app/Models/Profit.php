@@ -42,3 +42,5 @@ class Profit extends Model
         );
     }
 }
+
+
