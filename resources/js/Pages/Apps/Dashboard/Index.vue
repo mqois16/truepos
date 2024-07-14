@@ -67,6 +67,21 @@
                                 <span class="font-weight-bold"><i class="fa fa-box-open"></i> PRODUCT STOCK</span>
                             </div>
                             <div class="card-body">
+                                <div v-if="products_limit_stock.length > 0">
+                                    <ol class="list-group list-group-numbered">
+                                        <li v-for="product in products_limit_stock" :key="product.id"
+                                            class="list-group-item d-flex justify-content-between align-items-start">
+                                            <div class="ms-2 me-auto">
+                                                <div class="fw-bold">{{ product.title }}</div>
+                                                <div class="text-muted">Category : {{ product.category.name }}</div>
+                                            </div>
+                                            <span class="badge bg-danger rounded-pill">{{ product.stock }}</span>
+                                        </li>
+                                    </ol>
+                                </div>
+                                <div v-else class="alert alert-danger border-0 shadow rounded-3">
+                                    Data Tidak Tersedia!.
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -123,6 +138,9 @@ export default {
         //produk terlaris
         product: Array,
         total: Array,
+
+        //produk limit stock
+        products_limit_stock: Array,
     },
 
     setup(props) {
