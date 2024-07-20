@@ -40,9 +40,13 @@
                                             <td>{{ category.name }}</td>
                                             <td class="text-center"><img :src="category.image" width="40"></td>
                                             <td class="text-center">
-                                                <Link href="#" class="btn btn-success btn-sm me-2"><i
+                                                <Link :href="`/apps/categories/${category.id}/edit`"
+                                                    v-if="hasAnyPermission(['categories.edit'])"
+                                                    class="btn btn-success btn-sm me-2"><i
                                                     class="fa fa-pencil-alt me-1"></i> EDIT</Link>
-                                                <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
+                                                <button @click.prevent="destroy(category.id)"
+                                                    v-if="hasAnyPermission(['categories.delete'])"
+                                                    class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
                                                     DELETE</button>
                                             </td>
                                         </tr>
@@ -70,6 +74,9 @@ import { Head, Link, router } from '@inertiajs/vue3';
 
 //import ref from vue
 import { ref } from 'vue';
+
+//import sweet alert2
+import Swal from 'sweetalert2';
 
 export default {
     //layout
@@ -102,10 +109,38 @@ export default {
             });
         }
 
+        //method destroy
+        const destroy = (id) => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+
+                        router.delete(`/apps/categories/${id}`);
+
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'Category deleted successfully.',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false,
+                        });
+                    }
+                })
+        }
+
         //return
         return {
             search,
             handleSearch,
+            destroy
         }
 
     }
