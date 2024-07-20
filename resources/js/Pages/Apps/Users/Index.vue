@@ -48,10 +48,12 @@
                                                 </span>
                                             </td>
                                             <td class="text-center">
-                                                <Link href="#" v-if="hasAnyPermission(['users.edit'])"
+                                                <Link :href="`/apps/users/${user.id}/edit`"
+                                                    v-if="hasAnyPermission(['users.edit'])"
                                                     class="btn btn-success btn-sm me-2"><i
                                                     class="fa fa-pencil-alt me-1"></i> EDIT</Link>
-                                                <button v-if="hasAnyPermission(['users.delete'])"
+                                                <button @click.prevent="destroy(user.id)"
+                                                    v-if="hasAnyPermission(['users.delete'])"
                                                     class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
                                                     DELETE</button>
                                             </td>
@@ -80,6 +82,9 @@ import { Head, Link, router } from '@inertiajs/vue3';
 
 //import ref from vue
 import { ref } from 'vue';
+
+//import sweet alert2
+import Swal from 'sweetalert2';
 
 export default {
     //layout
@@ -111,10 +116,38 @@ export default {
             });
         }
 
+        //method destroy
+        const destroy = (id) => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+
+                        router.delete(`/apps/users/${id}`);
+
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'User deleted successfully.',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false,
+                        });
+                    }
+                })
+        }
+
         //return
         return {
             search,
             handleSearch,
+            destroy
         }
 
     }
