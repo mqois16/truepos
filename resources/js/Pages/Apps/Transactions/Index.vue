@@ -78,6 +78,11 @@
                                         <VueMultiselect v-model="customer_id" label="name" track-by="name"
                                             :options="customers"></VueMultiselect>
                                     </div>
+                                    <div class="col-md-6 float-end">
+                                        <label class="fw-bold">Payments</label>
+                                        <VueMultiselect v-model="payment_id" label="name" track-by="name"
+                                            :options="payments"></VueMultiselect>
+                                    </div>
                                 </div>
                                 <hr>
                                 <table class="table table-bordered">
@@ -175,6 +180,7 @@ export default {
     props: {
         auth: Object,
         customers: Array,
+        payments: Array,
         carts_total: Number,
         session: Object,
         carts: Array
@@ -304,6 +310,8 @@ export default {
 
         //define state "customer_id"
         const customer_id = ref('');
+        //define state "payment_id"
+        const payment_id = ref('');
 
         //method "storeTransaction"
         const storeTransaction = () => {
@@ -313,6 +321,7 @@ export default {
 
                 //send data to server
                 customer_id: customer_id.value ? customer_id.value.id : '',
+                payment_id: payment_id.value ? payment_id.value.id : '',
                 discount: discount.value,
                 grand_total: grandTotal.value,
                 cash: cash.value,
@@ -337,6 +346,9 @@ export default {
 
                     //set customer_id to ""
                     customer_id.value = '';
+
+                    //set payment_id to ""
+                    payment_id.value = '';
 
                     //show success alert
                     Swal.fire({
@@ -378,6 +390,7 @@ export default {
             setDiscount,
             setChange,
             customer_id,
+            payment_id,
             storeTransaction
         }
 

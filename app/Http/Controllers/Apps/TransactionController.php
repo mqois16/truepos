@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\Customer;
+use App\Models\Payment;
 use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -26,10 +27,14 @@ class TransactionController extends Controller
         //get all customers
         $customers = Customer::latest()->get();
 
+        //get all payments
+        $payments = Payment::latest()->get();
+
         return Inertia::render('Apps/Transactions/Index', [
             'carts'         => $carts,
             'carts_total'   => $carts->sum('price'),
-            'customers'     => $customers
+            'customers'     => $customers,
+            'payments'     => $payments
         ]);
     }
 
@@ -146,6 +151,7 @@ class TransactionController extends Controller
         $transaction = Transaction::create([
             'cashier_id'    => auth()->user()->id,
             'customer_id'   => $request->customer_id,
+            'payment_id'   => $request->payment_id,
             'invoice'       => $invoice,
             'cash'          => $request->cash,
             'change'        => $request->change,
@@ -205,7 +211,7 @@ class TransactionController extends Controller
     public function print(Request $request)
     {
         //get transaction
-        $transaction = Transaction::with('details.product', 'cashier', 'customer')->where('invoice', $request->invoice)->firstOrFail();
+        $transaction = Transaction::with('details.product', 'cashier', 'customer', 'payment')->where('invoice', $request->invoice)->firstOrFail();
 
         //return view
         return view('print.nota', compact('transaction'));
