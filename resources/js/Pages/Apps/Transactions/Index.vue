@@ -120,7 +120,7 @@
                                             <td class="text-end fw-bold" style="background-color: #e6e6e7;">- Rp. {{
                                                 Math.round(percentValue) +
                                                 discount
-                                            }}</td>
+}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -151,8 +151,9 @@
                                     <button
                                         class="btn btn-warning btn-md border-0 shadow text-uppercase me-2">Cancel</button>
                                     <button @click.prevent="storeTransaction"
-                                        class="btn btn-purple btn-md border-0 shadow text-uppercase"
-                                        :disabled="cash < grandTotal || grandTotal == 0">Pay Order & Print</button>
+                                        class="btn btn-purple btn-md border-0 shadow text-uppercase" :disabled="cash < grandTotal || grandTotal == 0 || (Math.round(percentValue) +
+                                            discount) <= 0 || (Math.round(percentValue) +
+                                                discount) > grandTotal">Pay Order & Print</button>
                                 </div>
                             </div>
                         </div>

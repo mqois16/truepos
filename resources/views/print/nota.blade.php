@@ -101,7 +101,7 @@
 
         @media print {
             @page {
-                width: 80mm;
+                width: 58mm;
                 margin: 0mm;
             }
         }
