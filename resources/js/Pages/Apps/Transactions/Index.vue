@@ -17,9 +17,9 @@
                                         placeholder="Scan or Input Barcode">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold">Product Name</label>
+                                    <label class="form-label fw-bold">Nama Produk</label>
                                     <input type="text" class="form-control" :value="product.title"
-                                        placeholder="Product Name" readonly>
+                                        placeholder="Nama Produk" readonly>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Qty</label>
@@ -55,10 +55,10 @@
                                         <h4 class="fw-bold">GRAND TOTAL</h4>
                                     </div>
                                     <div class="col-md-8 col-8 text-end">
-                                        <h4 class="fw-bold">Rp. {{ formatPrice(grandTotal) }}</h4>
+                                        <h4 class="fw-bold py-3 display-3">Rp. {{ formatPrice(grandTotal) }}</h4>
                                         <div v-if="change > 0">
                                             <hr>
-                                            <h5 class="text-success">Change : <strong>Rp. {{ formatPrice(change)
+                                            <h5 class="text-success">Kembalian : <strong>Rp. {{ formatPrice(change)
                                                     }}</strong></h5>
                                         </div>
                                     </div>
@@ -70,16 +70,16 @@
                             <div class="card-body">
                                 <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label class="fw-bold">Cashier</label>
+                                        <label class="fw-bold">Kasir</label>
                                         <input class="form-control" type="text" :value="auth.user.name" readonly>
                                     </div>
-                                    <div class="col-md-6 float-end">
+                                    <!-- <div class="col-md-6 float-end">
                                         <label class="fw-bold">Customer</label>
                                         <VueMultiselect v-model="customer_id" label="name" track-by="name"
                                             :options="customers"></VueMultiselect>
-                                    </div>
+                                    </div> -->
                                     <div class="col-md-6 float-end">
-                                        <label class="fw-bold">Payments</label>
+                                        <label class="fw-bold">Metode Pembayaran</label>
                                         <VueMultiselect v-model="payment_id" label="name" track-by="name"
                                             :options="payments"></VueMultiselect>
                                     </div>
@@ -89,8 +89,8 @@
                                     <thead>
                                         <tr style="background-color: #e6e6e7;">
                                             <th scope="col">#</th>
-                                            <th scope="col">Product Name</th>
-                                            <th scope="col">Price</th>
+                                            <th scope="col">Nama Produk</th>
+                                            <th scope="col">Harga</th>
                                             <th scope="col">Qty</th>
                                             <th scope="col">Sub Total</th>
                                         </tr>
@@ -113,17 +113,36 @@
                                             <td class="text-end fw-bold" style="background-color: #e6e6e7;">Rp. {{
                                                 formatPrice(carts_total) }}</td>
                                         </tr>
+                                        <tr style="color: red" v-if="percentValue || discount">
+                                            <td colspan="4" class="text-end fw-bold"
+                                                style="background-color: #e6e6e7; ">
+                                                TOTAL DISCOUNT</td>
+                                            <td class="text-end fw-bold" style="background-color: #e6e6e7;">- Rp. {{
+                                                Math.round(percentValue) +
+                                                discount
+                                            }}</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                                 <hr>
                                 <div class="d-flex align-items-end flex-column bd-highlight mb-3">
                                     <div class="mt-auto bd-highlight">
-                                        <label>Discount (Rp.)</label>
+                                        <label>Discount (<b>%</b>)</label>
+                                        <input type="number" v-model="percentDiscount" @keyup="setDiscount"
+                                            class="form-control" placeholder="Discount (%)">
+                                    </div>
+                                    <div class="mt-auto bd-highlight">
+                                        <p style="color: gray" v-if="percentValue"> - Rp. {{ Math.round(percentValue) }}
+                                        </p>
+                                    </div>
+                                    <div class="mt-1 bd-highlight">
+                                        <label>Discount (<b>Rp.</b>)</label>
                                         <input type="number" v-model="discount" @keyup="setDiscount"
                                             class="form-control" placeholder="Discount (Rp.)">
                                     </div>
+
                                     <div class="bd-highlight mt-4">
-                                        <label>Pay (Rp.)</label>
+                                        <label>Bayar (Rp.)</label>
                                         <input type="number" v-model="cash" @keyup="setChange" class="form-control"
                                             placeholder="Pay (Rp.)">
                                     </div>
@@ -286,13 +305,17 @@ export default {
         //define state "cash", "change" dan "discount"
         const cash = ref(0);
         const change = ref(0);
+        const percentDiscount = ref(0);
         const discount = ref(0);
+        const percentValue = ref(0)
+        console.log("nilainya adalah " + percentDiscount.value)
 
-        //method "setDiscount"
         const setDiscount = () => {
+            percentValue.value = props.carts_total * (percentDiscount.value / 100)
+            console.log("nilainya adalah " + percentValue.value)
 
             //set grandTotal
-            grandTotal.value = props.carts_total - discount.value;
+            grandTotal.value = props.carts_total - (percentValue.value + discount.value);
 
             //set cash to "0"
             cash.value = 0;
@@ -300,6 +323,19 @@ export default {
             //set change to "0"
             change.value = 0;
         }
+
+        // //method "setDiscount"
+        // const setDiscount = () => {
+
+        //     //set grandTotal
+        //     grandTotal.value = props.carts_total - discount.value;
+
+        //     //set cash to "0"
+        //     cash.value = 0;
+
+        //     //set change to "0"
+        //     change.value = 0;
+        // }
 
         //method "setChange"
         const setChange = () => {
@@ -322,7 +358,7 @@ export default {
                 //send data to server
                 customer_id: customer_id.value ? customer_id.value.id : '',
                 payment_id: payment_id.value ? payment_id.value.id : '',
-                discount: discount.value,
+                discount: discount.value + percentValue.value,
                 grand_total: grandTotal.value,
                 cash: cash.value,
                 change: change.value
@@ -388,6 +424,8 @@ export default {
             change,
             discount,
             setDiscount,
+            percentDiscount,
+            percentValue,
             setChange,
             customer_id,
             payment_id,
