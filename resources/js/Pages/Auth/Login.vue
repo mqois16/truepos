@@ -7,8 +7,8 @@
         <div class="fade-in">
             <div class="text-center mb-4">
                 <a href="" class="text-dark text-decoration-none">
-                    <img src="/images/cash-machine.png" width="70">
-                    <h3 class="mt-2 font-weight-bold">APLIKASI KASIR</h3>
+                    <img src="/images/applogo.png" width="80%">
+                    <!-- <h3 class="mt-2 font-weight-bold">APLIKASI KASIR CHY</h3> -->
                 </a>
             </div>
             <div class="card-group">
@@ -29,7 +29,8 @@
                                         <i class="fa fa-envelope"></i>
                                     </span>
                                 </div>
-                                <input class="form-control" v-model="form.email" :class="{ 'is-invalid': errors.email }" type="email" placeholder="Email Address">
+                                <input class="form-control" v-model="form.email" :class="{ 'is-invalid': errors.email }"
+                                    type="email" placeholder="Email Address">
                             </div>
                             <div v-if="errors.email" class="alert alert-danger">
                                 {{ errors.email }}
@@ -40,17 +41,19 @@
                                         <i class="fa fa-lock"></i>
                                     </span>
                                 </div>
-                                <input class="form-control" v-model="form.password" :class="{ 'is-invalid': errors.password }" type="password" placeholder="Password">
+                                <input class="form-control" v-model="form.password"
+                                    :class="{ 'is-invalid': errors.password }" type="password" placeholder="Password">
                             </div>
                             <div v-if="errors.password" class="alert alert-danger">
                                 {{ errors.password }}
                             </div>
                             <div class="row">
-                                <div class="col-12 mb-3 text-end">
+                                <!-- <div class="col-12 mb-3 text-end">
                                     <Link href="/forgot-password">Forgot Password?</Link>
-                                </div>
+                                </div> -->
                                 <div class="col-12">
-                                    <button class="btn btn-primary shadow-sm rounded-sm px-4 w-100" type="submit">LOGIN</button>
+                                    <button class="btn btn-primary shadow-sm rounded-sm px-4 w-100"
+                                        type="submit"><b>LOGIN</b></button>
                                 </div>
                             </div>
                         </form>

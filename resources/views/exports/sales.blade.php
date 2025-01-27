@@ -1,12 +1,12 @@
 <div class="title" style="padding-bottom: 13px">
     <div style="text-align: center;text-transform: uppercase;font-size: 15px">
-        SantriKoding
+        CHYPOS SALES REPORT
     </div>
     <div style="text-align: center">
-        Alamat: Desa Gedangalas, Kec. Gajah, Kab. Demak
+        Margobawero - Kota Madiun
     </div>
     <div style="text-align: center">
-        Telp: 0857-9087-9087
+         
     </div>
 </div>
 <table style="width: 100%">

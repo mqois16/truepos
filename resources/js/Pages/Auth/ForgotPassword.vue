@@ -7,8 +7,10 @@
         <div class="fade-in">
             <div class="text-center mb-4">
                 <a href="" class="text-dark text-decoration-none">
-                    <img src="/images/cash-machine.png" width="70">
-                    <h3 class="mt-2 font-weight-bold">APLIKASI KASIR</h3>
+                    <a href="" class="text-dark text-decoration-none">
+                        <img src="/images/applogo.png" height="80">
+                        <!-- <h3 class="mt-2 font-weight-bold">APLIKASI KASIR CHY</h3> -->
+                    </a>
                 </a>
             </div>
             <div class="card-group">

@@ -31,10 +31,11 @@
                                         <tr>
                                             <th scope="col">Barcode</th>
                                             <th scope="col">Title</th>
-                                            <th scope="col">Buy Price</th>
+                                            <th scope="col" v-if="hasAnyPermission(['products.edit'])">Buy Price</th>
                                             <th scope="col">Sell Price</th>
                                             <th scope="col">Stock</th>
-                                            <th scope="col" style="width:20%">Actions</th>
+                                            <th scope="col" style="width:20%"
+                                                v-if="hasAnyPermission(['products.edit'])">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -44,10 +45,11 @@
                                                     :width="1" :height="20" />
                                             </td>
                                             <td>{{ product.title }}</td>
-                                            <td>Rp. {{ formatPrice(product.buy_price) }}</td>
+                                            <td v-if="hasAnyPermission(['products.edit'])">Rp. {{
+                                                formatPrice(product.buy_price) }}</td>
                                             <td>Rp. {{ formatPrice(product.sell_price) }}</td>
                                             <td>{{ product.stock }}</td>
-                                            <td class="text-center">
+                                            <td class="text-center" v-if="hasAnyPermission(['products.edit'])">
                                                 <Link :href="`/apps/products/${product.id}/edit`"
                                                     v-if="hasAnyPermission(['products.edit'])"
                                                     class="btn btn-success btn-sm me-2"><i

@@ -79,10 +79,14 @@
                                             :options="customers"></VueMultiselect>
                                     </div> -->
                                     <div class="col-md-6 float-end">
-                                        <label class="fw-bold">Metode Pembayaran</label>
-                                        <VueMultiselect v-model="payment_id" label="name" track-by="name"
-                                            :options="payments"></VueMultiselect>
+                                        <label class="fw-bold">Metode Pembayaran </label>
+                                        <VueMultiselect v-model="payment_id" 
+                                        label="name" 
+                                        track-by="name"
+                                        :options="payments" 
+                                        placeholder="Tunai (default)"></VueMultiselect>
                                     </div>
+
                                 </div>
                                 <hr>
                                 <table class="table table-bordered">
@@ -120,7 +124,7 @@
                                             <td class="text-end fw-bold" style="background-color: #e6e6e7;">- Rp. {{
                                                 Math.round(percentValue) +
                                                 discount
-}}</td>
+                                            }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -129,22 +133,23 @@
                                     <div class="mt-auto bd-highlight">
                                         <label>Discount (<b>%</b>)</label>
                                         <input type="number" v-model="percentDiscount" @keyup="setDiscount"
-                                            class="form-control" placeholder="Discount (%)">
+                                            class="form-control" placeholder="0">
                                     </div>
                                     <div class="mt-auto bd-highlight">
-                                        <p style="color: gray" v-if="percentValue"> - Rp. {{ Math.round(percentValue) }}
+                                        <p style="color: gray" v-if="parseInt(percentValue)"> - Rp. {{
+                                            Math.round(percentValue) }}
                                         </p>
                                     </div>
                                     <div class="mt-1 bd-highlight">
                                         <label>Discount (<b>Rp.</b>)</label>
                                         <input type="number" v-model="discount" @keyup="setDiscount"
-                                            class="form-control" placeholder="Discount (Rp.)">
+                                            class="form-control" placeholder="0">
                                     </div>
 
                                     <div class="bd-highlight mt-4">
                                         <label>Bayar (Rp.)</label>
                                         <input type="number" v-model="cash" @keyup="setChange" class="form-control"
-                                            placeholder="Pay (Rp.)">
+                                            placeholder="0">
                                     </div>
                                 </div>
                                 <div class="text-end mt-4">
@@ -152,7 +157,7 @@
                                         class="btn btn-warning btn-md border-0 shadow text-uppercase me-2">Cancel</button>
                                     <button @click.prevent="storeTransaction"
                                         class="btn btn-purple btn-md border-0 shadow text-uppercase" :disabled="cash < grandTotal || grandTotal == 0 || (Math.round(percentValue) +
-                                            discount) <= 0 || (Math.round(percentValue) +
+                                            discount) < 0 || (Math.round(percentValue) +
                                                 discount) > grandTotal">Pay Order & Print</button>
                                 </div>
                             </div>
@@ -178,7 +183,7 @@ import VueMultiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.css';
 
 //import ref form vue
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 //import axios
 import axios from 'axios';
@@ -295,7 +300,7 @@ export default {
                     grandTotal.value = props.carts_total;
 
                     //set cash to "0"
-                    cash.value = 0;
+                    cash.value = payment_id.id === 1 ? 0 : grandTotal.value;
 
                     //set change to "0"
                     change.value = 0;
@@ -303,13 +308,28 @@ export default {
             })
         }
 
+        //define state "payment_id"
+        const payment_id = ref(null);
+        console.log("payment_id", payment_id)
         //define state "cash", "change" dan "discount"
-        const cash = ref(0);
-        const change = ref(0);
-        const percentDiscount = ref(0);
-        const discount = ref(0);
-        const percentValue = ref(0)
+        const cash = ref(null);
+        const change = ref(null);
+        const percentDiscount = ref(null);
+        const discount = ref(null);
+        const percentValue = ref(null)
         console.log("nilainya adalah " + percentDiscount.value)
+
+        const setCash = (newPaymentId) => {
+            if (newPaymentId === '1') {
+                cash.value = null; // Jika payment_id bernilai 1, cash bernilai null
+            } else {
+                cash.value = grandTotal.value;
+            }
+        };
+
+        watch(payment_id, (newVal) => {
+            setCash(newVal.id);
+        });
 
         const setDiscount = () => {
             percentValue.value = props.carts_total * (percentDiscount.value / 100)
@@ -319,7 +339,7 @@ export default {
             grandTotal.value = props.carts_total - (percentValue.value + discount.value);
 
             //set cash to "0"
-            cash.value = 0;
+            cash.value = payment_id.id === 1 ? 0 : grandTotal.value;
 
             //set change to "0"
             change.value = 0;
@@ -347,8 +367,6 @@ export default {
 
         //define state "customer_id"
         const customer_id = ref('');
-        //define state "payment_id"
-        const payment_id = ref('');
 
         //method "storeTransaction"
         const storeTransaction = () => {
@@ -358,7 +376,7 @@ export default {
 
                 //send data to server
                 customer_id: customer_id.value ? customer_id.value.id : '',
-                payment_id: payment_id.value ? payment_id.value.id : '',
+                payment_id: payment_id.value ? payment_id.value.id : 1,
                 discount: discount.value + percentValue.value,
                 grand_total: grandTotal.value,
                 cash: cash.value,
@@ -430,7 +448,7 @@ export default {
             setChange,
             customer_id,
             payment_id,
-            storeTransaction
+            storeTransaction,
         }
 
     }
